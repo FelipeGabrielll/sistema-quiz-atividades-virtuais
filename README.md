@@ -14,10 +14,11 @@ Sistema gamificado de criação e aplicação de quizzes em tempo real, desenvol
 * **Acesso a Dados:** JDBC
 * **Padrão Arquitetural:** Camadas (Model, DAO, Service, View)
 * **Controle de Versão:** Git + GitHub
-
+  
 ## Estrutura de Diretórios
 A arquitetura do projeto está organizada da seguinte forma:
 
+```text
 .
 ├── src/                 # Código-fonte Java, organizado em camadas
 │   ├── model/           # Entidades do domínio (incluindo a hierarquia de herança)
