@@ -1,63 +1,91 @@
--- Tabela usuarios
-CREATE TABLE usuarios (
-    id SERIAL PRIMARY KEY,
-    nome VARCHAR(255) NOT NULL,
-    email VARCHAR(255) NOT NULL UNIQUE,
-    tipo_usuario VARCHAR(50) NOT NULL
+CREATE TABLE usuarios(
+    id INT PRIMARY KEY,
+    nome VARCHAR(100),
+    email VARCHAR(100),
+    tipo_usuario VARCHAR(100)
 );
 
--- Tabela quizzes
-CREATE TABLE quizzes (
-    id SERIAL PRIMARY KEY,
-    titulo VARCHAR(255) NOT NULL,
-    disciplina VARCHAR(255) NOT NULL,
-    professor_id INT NOT NULL,
-    CONSTRAINT fk_professor FOREIGN KEY (professor_id) REFERENCES usuarios(id)
+CREATE TABLE quizzes(
+    id INT PRIMARY KEY,
+    titulo VARCHAR(100),
+    disciplina VARCHAR(100),
+    professor_id INT
 );
 
--- Tabela questoes
-CREATE TABLE questoes (
-    id SERIAL PRIMARY KEY,
-    quiz_id INT NOT NULL,
-    enunciado VARCHAR(255) NOT NULL,
-    tipo_questao VARCHAR(50) NOT NULL,
-    gabarito VARCHAR(255) NOT NULL,
-    tempo_limite_seg INT NOT NULL,
-    pontos INT NOT NULL,
-    CONSTRAINT fk_quiz_questoes FOREIGN KEY (quiz_id) REFERENCES quizzes(id)
+CREATE TABLE sessoes(
+    id INT PRIMARY KEY,
+    quiz_id INT,
+    pin_acesso INT,
+    data_criacao TIMESTAMP,
+    status VARCHAR(100)
 );
 
--- Tabela sessoes
-CREATE TABLE sessoes (
-    id SERIAL PRIMARY KEY,
-    quiz_id INT NOT NULL,
-    pin_acesso INT NOT NULL,
-    data_criacao TIMESTAMP NOT NULL,
-    status VARCHAR(50) NOT NULL,
-    CONSTRAINT fk_quiz_sessoes FOREIGN KEY (quiz_id) REFERENCES quizzes(id)
+CREATE TABLE questoes(
+    id INT PRIMARY KEY,
+    quiz_id INT,
+    enunciado VARCHAR(255),
+    tipo_questao VARCHAR(100),
+    gabarito VARCHAR(100),
+    tempo_limite_seg INT,
+    pontos INT
 );
 
--- Tabela respostas_alunos
-CREATE TABLE respostas_alunos (
-    id SERIAL PRIMARY KEY,
-    aluno_id INT NOT NULL,
-    sessao_id INT NOT NULL,
-    questao_id INT NOT NULL,
-    resposta_submetida VARCHAR(255) NOT NULL,
-    pontos_obtidos INT NOT NULL,
-    data_resposta TIMESTAMP NOT NULL,
-    CONSTRAINT fk_aluno_respostas FOREIGN KEY (aluno_id) REFERENCES usuarios(id),
-    CONSTRAINT fk_sessao_respostas FOREIGN KEY (sessao_id) REFERENCES sessoes(id),
-    CONSTRAINT fk_questao_respostas FOREIGN KEY (questao_id) REFERENCES questoes(id)
+CREATE TABLE respostas_alunos(
+    id INT PRIMARY KEY,
+    aluno_id INT,
+    sessao_id INT,
+    questao_id INT,
+    resposta_submetida VARCHAR(100),
+    pontos_obtidos INT,
+    data_resposta TIMESTAMP
 );
 
--- Tabela feedbacks
-CREATE TABLE feedbacks (
-    id SERIAL PRIMARY KEY,
-    aluno_id INT NOT NULL,
-    sessao_id INT NOT NULL,
+CREATE TABLE feedbacks(
+    id INT PRIMARY KEY,
+    aluno_id INT,
+    sessao_id INT,
     opiniao_dinamica VARCHAR(200),
-    duvida_conteudo TEXT,
-    CONSTRAINT fk_aluno_feedbacks FOREIGN KEY (aluno_id) REFERENCES usuarios(id),
-    CONSTRAINT fk_sessao_feedbacks FOREIGN KEY (sessao_id) REFERENCES sessoes(id)
+    duvida_conteudo TEXT
 );
+
+/* RELACIONAMENTOS DAS CHAVES ESTRANGEIRAS */
+
+ALTER TABLE quizzes
+ADD CONSTRAINT fk_quizzes_professor_id
+FOREIGN KEY (professor_id)
+REFERENCES usuarios(id);
+
+ALTER TABLE sessoes
+ADD CONSTRAINT fk_sessoes_quiz_id
+FOREIGN KEY (quiz_id)
+REFERENCES quizzes(id);
+
+ALTER TABLE questoes
+ADD CONSTRAINT fk_questoes_quiz_id
+FOREIGN KEY (quiz_id)
+REFERENCES quizzes(id);
+
+ALTER TABLE respostas_alunos
+ADD CONSTRAINT fk_respostas_aluno_id
+FOREIGN KEY (aluno_id)
+REFERENCES usuarios(id);
+
+ALTER TABLE respostas_alunos
+ADD CONSTRAINT fk_respostas_sessao_id
+FOREIGN KEY (sessao_id)
+REFERENCES sessoes(id);
+
+ALTER TABLE respostas_alunos
+ADD CONSTRAINT fk_respostas_questao_id
+FOREIGN KEY (questao_id)
+REFERENCES questoes(id);
+
+ALTER TABLE feedbacks
+ADD CONSTRAINT fk_feedbacks_aluno_id
+FOREIGN KEY (aluno_id)
+REFERENCES usuarios(id);
+
+ALTER TABLE feedbacks
+ADD CONSTRAINT fk_feedbacks_sessao_id
+FOREIGN KEY (sessao_id)
+REFERENCES sessoes(id);
