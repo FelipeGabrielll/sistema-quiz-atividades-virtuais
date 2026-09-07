@@ -1,12 +1,12 @@
-# Sistema de Quiz e Atividades Virtuais 
+# Sistema de Quiz e Atividades Virtuais
 
 Sistema gamificado de criação e aplicação de quizzes em tempo real, desenvolvido para apoiar professores na avaliação dinâmica e engajar alunos em sala de aula. Projeto referente à AEP 2026.2 do curso de Engenharia de Software.
 
 **ODS Atendida:** ODS 4 — Educação de Qualidade.
 
 ## Equipe
-* Felipe Gabriel Caspani Carlota- RA: 25113749-2
-* Nicolas Henrique Dantas da Silva - RA: 25000715-2
+* Felipe Gabriel Caspani Carlota - RA: 25113749-2
+* Nicolas Henrique Dantas Da Silva - RA: 25000715-2 
 
 ## Tecnologias Utilizadas
 * **Linguagem:** Java (17 LTS)
@@ -14,7 +14,7 @@ Sistema gamificado de criação e aplicação de quizzes em tempo real, desenvol
 * **Acesso a Dados:** JDBC
 * **Padrão Arquitetural:** Camadas (Model, DAO, Service, View)
 * **Controle de Versão:** Git + GitHub
-  
+
 ## Estrutura de Diretórios
 A arquitetura do projeto está organizada da seguinte forma:
 
@@ -28,7 +28,7 @@ A arquitetura do projeto está organizada da seguinte forma:
 ├── docs/                # PDF da entrega, diagrama de classes e DER
 ├── database/            # schema.sql (criação das tabelas)
 └── README.md
-
+```
 
 ## Como Executar Localmente
 
@@ -39,25 +39,31 @@ Certifique-se de ter instalado em sua máquina:
 * Git
 
 Para verificar a instalação do Java, execute no terminal:
+```bash
 java -version
 javac -version
-
+```
 
 ### 2. Configuração do Banco de Dados
 Conecte-se ao seu PostgreSQL e crie o banco de dados:
+```sql
 CREATE DATABASE sistema_quiz;
-
+```
 
 Em seguida, execute o script de criação das tabelas contido na pasta `database/`:
+```bash
 psql -U seu_usuario -d sistema_quiz -f database/schema.sql
-
+```
 
 ### 3. Compilação
 No terminal, a partir da raiz do projeto, execute o comando abaixo para compilar as classes Java:
+```bash
 javac -d bin -cp caminho/para/driver-postgresql.jar $(find src -name "*.java")
-
+```
 *(Nota: No Windows, utilize `;` no lugar de `:` como separador de classpath e adapte o separador de diretórios se necessário).*
 
 ### 4. Execução
 Para iniciar o sistema via console, utilize o comando:
+```bash
 java -cp bin:caminho/para/driver-postgresql.jar pacote.ClassePrincipal
+```
