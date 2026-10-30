@@ -55,15 +55,59 @@ Em seguida, execute o script de criação das tabelas contido na pasta `database
 psql -U seu_usuario -d sistema_quiz -f database/schema.sql
 ```
 
-### 3. Compilação
-No terminal, a partir da raiz do projeto, execute o comando abaixo para compilar as classes Java:
-```bash
-javac -d bin -cp caminho/para/driver-postgresql.jar $(find src -name "*.java")
-```
-*(Nota: No Windows, utilize `;` no lugar de `:` como separador de classpath e adapte o separador de diretórios se necessário).*
+### 3. Driver JDBC do PostgreSQL
+Baixe o driver em https://jdbc.postgresql.org/download/ (ex.: `postgresql-42.7.4.jar`) e coloque o arquivo na pasta `lib/` na raiz do projeto.
 
-### 4. Execução
-Para iniciar o sistema via console, utilize o comando:
+### 4. Credenciais do banco
+Por padrão o sistema conecta em `jdbc:postgresql://localhost:5432/sistema_quiz` com usuário `postgres` e senha `postgres`. Se o seu for diferente, defina as variáveis de ambiente antes de executar:
+
 ```bash
-java -cp bin:caminho/para/driver-postgresql.jar pacote.ClassePrincipal
+# Linux / macOS
+export DB_USER=seu_usuario
+export DB_PASSWORD=sua_senha
 ```
+```powershell
+# Windows (PowerShell)
+$env:DB_USER="seu_usuario"
+$env:DB_PASSWORD="sua_senha"
+```
+(Opcional: `DB_URL` para outro host, porta ou nome de banco.)
+
+### 5. Compilação
+Na raiz do projeto:
+
+```bash
+# Linux / macOS
+javac -encoding UTF-8 -d bin -cp "lib/*" $(find src -name "*.java")
+```
+```powershell
+# Windows (PowerShell)
+javac -encoding UTF-8 -d bin -cp "lib/*" (Get-ChildItem -Recurse src -Filter *.java).FullName
+```
+
+### 6. Execução
+```bash
+# Linux / macOS
+java -cp "bin:lib/*" view.Main
+```
+```powershell
+# Windows (use ; no classpath)
+java -cp "bin;lib/*" view.Main
+```
+
+## Funcionalidades implementadas (2ª Entrega)
+Menu de console com operações completas de **CRUD persistidas no PostgreSQL** via JDBC:
+
+| Entidade | Create | Read | Update | Delete |
+|---|---|---|---|---|
+| Usuário (Professor / Aluno) | ✔ | ✔ | ✔ | ✔ |
+| **Quiz** (entidade principal – RF01) | ✔ | ✔ (com suas questões) | ✔ | ✔ (exclui as questões em cascata) |
+| Questão (Múltipla escolha / V ou F) | ✔ | ✔ | ✔ | ✔ |
+
+Também é possível **jogar um quiz salvo no banco**: as respostas são corrigidas por `validarResposta()`, sobrescrito em cada tipo de questão (polimorfismo).
+
+### Camadas
+* `model/` – entidades (`Usuario` → `Professor`/`Aluno`, `Questao` → `QuestaoMultiplaEscolha`/`QuestaoVerdadeiroFalso`, `Quiz` com composição 1:N de `Questao`)
+* `dao/` – acesso ao banco com JDBC (`ConexaoBD`, interface `CrudDAO<T>` e um DAO por tabela)
+* `service/` – regras de negócio e validações (ex.: só professor cria quiz; gabarito V/F aceita apenas V ou F)
+* `view/` – menu de console (`MenuConsole`) e ponto de entrada (`Main`)
