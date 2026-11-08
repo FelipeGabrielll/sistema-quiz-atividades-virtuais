@@ -1,19 +1,19 @@
 CREATE TABLE usuarios(
-    id INT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     nome VARCHAR(100),
     email VARCHAR(100),
     tipo_usuario VARCHAR(100)
 );
 
 CREATE TABLE quizzes(
-    id INT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     titulo VARCHAR(100),
     disciplina VARCHAR(100),
     professor_id INT
 );
 
 CREATE TABLE sessoes(
-    id INT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     quiz_id INT,
     pin_acesso INT,
     data_criacao TIMESTAMP,
@@ -21,7 +21,7 @@ CREATE TABLE sessoes(
 );
 
 CREATE TABLE questoes(
-    id INT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     quiz_id INT,
     enunciado VARCHAR(255),
     tipo_questao VARCHAR(100),
@@ -31,7 +31,7 @@ CREATE TABLE questoes(
 );
 
 CREATE TABLE respostas_alunos(
-    id INT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     aluno_id INT,
     sessao_id INT,
     questao_id INT,
@@ -41,7 +41,7 @@ CREATE TABLE respostas_alunos(
 );
 
 CREATE TABLE feedbacks(
-    id INT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     aluno_id INT,
     sessao_id INT,
     opiniao_dinamica VARCHAR(200),
@@ -63,7 +63,8 @@ REFERENCES quizzes(id);
 ALTER TABLE questoes
 ADD CONSTRAINT fk_questoes_quiz_id
 FOREIGN KEY (quiz_id)
-REFERENCES quizzes(id);
+REFERENCES quizzes(id)
+ON DELETE CASCADE; /* composição 1:N: excluir o quiz exclui suas questões */
 
 ALTER TABLE respostas_alunos
 ADD CONSTRAINT fk_respostas_aluno_id
